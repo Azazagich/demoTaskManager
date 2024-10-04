@@ -9,10 +9,4 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
-
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE users SET role_id = null WHERE role_id = :id", nativeQuery = true)
-    void updateToNullUsersByRoleId(@Param("id") Long id);
-}
+public interface RoleRepository extends JpaRepository<Role, Long> { }
