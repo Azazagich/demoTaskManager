@@ -2,8 +2,8 @@ package org.example.demotaskmanager.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.example.demotaskmanager.domain.Role;
-import org.example.demotaskmanager.domain.User;
 import org.example.demotaskmanager.repository.RoleRepository;
+import org.example.demotaskmanager.repository.UserRepository;
 import org.example.demotaskmanager.service.dto.RoleDTO;
 import org.example.demotaskmanager.service.mapper.RoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +12,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 @Transactional
 public class RoleService {
     private final RoleRepository roleRepository;
 
+    private final UserRepository userRepository;
+
     private final RoleMapper roleMapper;
 
     @Autowired
-    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper){
+    public RoleService(RoleRepository roleRepository, UserRepository userRepository, RoleMapper roleMapper){
         this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
         this.roleMapper = roleMapper;
     }
-
 
     public RoleDTO getById(Long id) {
         return roleMapper.toDTO(roleRepository.findById(id).orElseThrow());
@@ -66,7 +68,7 @@ public class RoleService {
 //        users.forEach(role::removeUser);
         //
         try {
-            roleRepository.updateToNullUsersByRoleId(id);
+            userRepository.updateToNullUsersByRoleId(id);
             roleRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException("Role with id " + id + " not found");
